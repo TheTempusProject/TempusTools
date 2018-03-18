@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Tempus Tools Options</title>
+    <style>
+        body {
+            font-family: tahoma, verdana, arial, sans-serif;
+            color: #444;
+            background: #ccc;
+            font-size: 75%;
+        }
+        input, textarea {
+            border: 3px solid #ccc;
+        }
+        textarea {
+            width: 100%
+        }
+        label {
+            font-weight: bold;
+        }
+        button {
+            cursor: pointer;
+            color: #444;
+        }
+        hr {
+            border-style: solid;
+            color: #ffcece;
+            margin: 10px auto;
+        }
+        dd {
+            margin: 5px 0;
+        }
+        button:hover {
+            color: #000;
+        }
+        .success {
+            background: #7f7;
+            border-color: #5f5;
+            -webkit-transition: opacity 4s ease-in;
+            opacity: 0;
+        }
+        .failure {
+            background: #f77;
+            border-color: #f55;
+        }
+        .help {
+            font-style: italic;
+            color: #999;
+        }
+        #container {
+            width: 600px;
+            margin: auto;
+            border: 1px solid #aaa;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        #container h1 {
+            margin-top: 0px;
+            display: inline-block;
+        }
+        #logo {
+            height: 64px;
+            vertical-align: bottom;
+            margin-right: 20px;
+        }
+        #savemessage {
+            display: inline-block;
+            margin-left: 14px;
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <img src="../images/icon_128.png" alt="logo" id="logo"><h1>TempusTools Options</h1>
+        <p>The following options control how this extension will function. If you would like a more detailed explanation of these controls, please visit <a href="http://thetempusproject.com/tempustools">The Tempus Project</a> for more information.</p>
+        <p>Please remember to <strong>save</strong> you changes once you are done.</p>
+        <hr>
+        <dl>
+            <dt><label for="blacklist">URLs to disable TempusTools on:</label></dt>
+            <dd><textarea id="blacklist"></textarea></dd>
+            <dd><span class="help">Please comma separate the list.  For reference on patterns, see <a href="https://developer.chrome.com/extensions/match_patterns" target="_blank">URL Pattern Matches</a>.</span></dd>
+        </dl>
+		<dl>
+			<dt><label for="max_combined_size">Maximum combined header size (in bytes):</label></dt>
+            <dd><input type="text" value="" id="max_combined_size" /></dd>
+            <dd><span class="help">Chrome has a high-level of 256kb for header size.</span></dd>
+            <dd>See <a href="https://github.com/TheTempusProject//issues/10" target="_blank">Github issues for TempusTools</a>.</dd>
+        </dl>
+        <div>
+            <button id="submit">Save</button><span id="savemessage"></span>
+        </div>
+    </div>
+    <script src="../js/options.js"></script>
+</body>
+</html>
