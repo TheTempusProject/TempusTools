@@ -1,16 +1,24 @@
 /**
+ * TempusTools/js/background.js
+ *
  * Background processor for TempusTools
  * 
  * Handles various tasks including:
  * - adding the outgoing header
  * - adding a listener for message from devtools to run console log on
  * - inline script
- * 
+ *
+ * @version 1.1
+ *
  * @author Aaron Saray aaron@aaronsaray.com
  *
- * Rewritten for specialized application by:
+ * - Rewritten for specialized application by:
  * 
  * @author Joey Kimsey joeyk4816@gmail.com
+ *
+ * @link    https://TheTempusProject.com/TempusTools
+ *
+ * @license https://opensource.org/licenses/MIT [MIT LICENSE]
  */
 
 /**

@@ -1,9 +1,20 @@
 /**
- * Devtools script
- * 
- * gets ran once development tools are opened
+ * TempusTools/js/devtools.js
+ *
+ * Executes when the user opens Chromes's Developer Tools.
  * Handles watching headers, parsing them, and sending them to the listener
+ *
+ * @version 1.1
+ *
  * @author Aaron Saray aaron@aaronsaray.com
+ *
+ * - Rewritten for specialized application by:
+ * 
+ * @author Joey Kimsey joeyk4816@gmail.com
+ *
+ * @link    https://TheTempusProject.com/TempusTools
+ *
+ * @license https://opensource.org/licenses/MIT [MIT LICENSE]
  */
 
 /**
