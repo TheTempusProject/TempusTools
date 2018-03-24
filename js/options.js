@@ -33,7 +33,7 @@ function TempusTools_Options() {
      * @private
      */
     var _defaultOptions = {
-        blacklist: '*://www.TheTempusProject.com/*',
+        securityHash: '*securehashythingyhere*',
         maxCombinedSize: 261120 // 255kB
     };
 
@@ -49,10 +49,10 @@ function TempusTools_Options() {
      * Used to save options to local storage
      */
     var _save = function() {
-        var blacklist = document.querySelector('#blacklist').value,
+        var securityHash = document.querySelector('#secHash').value,
             max_combined_size = document.querySelector('#max_combined_size').value;
         var options = {
-            blacklist: blacklist,
+            securityHash: securityHash,
             maxCombinedSize: max_combined_size
         };
 
@@ -90,7 +90,7 @@ function TempusTools_Options() {
             if (!settings.options) {
                 settings.options = _defaultOptions;
             }
-            document.querySelector('#blacklist').value = settings.options.blacklist;
+            document.querySelector('#secHash').value = settings.options.securityHash;
             document.querySelector('#max_combined_size').value = settings.options.maxCombinedSize;
         });
     };

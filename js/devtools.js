@@ -18,20 +18,20 @@
  */
 
 /**
- * main class for parsing all wildfire headers and creating messaging objects
+ * main class for parsing all tempus headers and creating messaging objects
  */
 function TempusTools() {
 
     /**
      * Public method that is ran on network requests finishing
      *
-     * This method is used to determine if there are any firePHP Headers in here, and if so, send messages to background.js
+     * This method is used to determine if there are any TempusDebugger Headers in here, and if so, send messages to background.js
      * @param request is a HAR entry
      */
     this.processHeaders = function(request) {
-        var wfHeaders = _getWildfireHeaders(request);
-        if (_isProperProtocol(wfHeaders)) {
-        	var sortedHeaders = _getSortedMessageHeaders(wfHeaders);
+        var tdHeaders = _getTempusHeaders(request);
+        if (_isProperProtocol(tdHeaders)) {
+        	var sortedHeaders = _getSortedMessageHeaders(tdHeaders);
 
 	        /**
         	 * now loop through and build objects from these results
@@ -61,8 +61,8 @@ function TempusTools() {
         	}
 
 	        /** handle truncated message **/
-	        if (_isTruncatedResponse(wfHeaders)) {
-		        var bytes = wfHeaders['x-wf-notify-truncated']; //note: the final format has not yet been defined for this
+	        if (_isTruncatedResponse(tdHeaders)) {
+		        var bytes = tdHeaders['X-td-notify-truncated']; //note: the final format has not yet been defined for this
 		        var commandObject = {
 			        type: "info",
 			        params: ["TempusTools has truncated headers for Chrome.  Truncated bytes: " + bytes]
@@ -94,42 +94,42 @@ function TempusTools() {
     };
 
     /**
-     * parses through the response headers to pull out only wildfire headers
+     * parses through the response headers to pull out only TempusDebugger headers
      *
      * @param HAR A HAR entry
-     * @return {Object} headers that are only wildfire
+     * @return {Object} headers that are only TempusDebugger
      * @private
      */
-    var _getWildfireHeaders = function(HAR) {
-        var headers = HAR.response.headers, wfHeaders = {};
+    var _getTempusHeaders = function(HAR) {
+        var headers = HAR.response.headers, tdHeaders = {};
 
         /** go through all headers on this request **/
-        var wildfireHeaderBeginRegex = /^X-Wf-/i;
+        var tempusHeaderBeginRegex = /^X-td-/i;
         for (var i = 0; i < headers.length; i++) {
-            /** if it matches wildfire, add it to the object **/
-            if (wildfireHeaderBeginRegex.test(headers[i].name)) {
-                wfHeaders[headers[i].name.toLowerCase()] =  headers[i].value;
+            /** if it matches tempus, add it to the object **/
+            if (tempusHeaderBeginRegex.test(headers[i].name)) {
+                tdHeaders[headers[i].name] =  headers[i].value;
             }
         };
 
-        return wfHeaders;
+        return tdHeaders;
     };
 
     /**
-     * This works with all known wildfire headers, and sorts all of the message headers numerically
+     * This works with tempus headers and sorts all of the message headers numerically
      * 
-     * @param wfHeaders an object of headers matching wildfire specifications
+     * @param tdHeaders an object of headers matching tempus specifications
      * @return {array} headers in proper order to be either messaged or combined
      */
-    var _getSortedMessageHeaders = function(wfHeaders) {
+    var _getSortedMessageHeaders = function(tdHeaders) {
     	/** we can't guarantee the order of any headers, so they need to be sorted properly **/
     	var sortedHeaders = [];
-        var wildfireHeaderBeginRegex = /^x-wf-1-1-1-/;
-    	for (var key in wfHeaders) {
-    		if (wildfireHeaderBeginRegex.test(key)) {
+        var tempusHeaderBeginRegex = /^X-td-1-1-1-/;
+    	for (var key in tdHeaders) {
+    		if (tempusHeaderBeginRegex.test(key)) {
     			/** new key is minus one because our array needs to start at 0 for JS to sort it properly **/
-    			var newKey = parseInt(key.replace('x-wf-1-1-1-', '')) - 1;
-    			sortedHeaders[newKey] = wfHeaders[key];
+    			var newKey = parseInt(key.replace('X-td-1-1-1-', '')) - 1;
+    			sortedHeaders[newKey] = tdHeaders[key];
     		}
     	}
     	return sortedHeaders;
@@ -143,17 +143,17 @@ function TempusTools() {
      * @param headerObject
      */
     var _isProperProtocol = function(headerObject) {
-        return headerObject['x-wf-protocol-1'] == 'http://meta.wildfirehq.org/Protocol/JsonStream/0.2';
+        return headerObject['X-td-Protocol-1'] == 'http://www.thetempusproject.com/tempusTools/1.1';
     };
 
 	/**
 	 * Determines if there is a truncated alert
-	 * @param wfHeaders
+	 * @param tdHeaders
 	 * @returns {boolean}
 	 * @private
 	 */
-	var _isTruncatedResponse = function(wfHeaders) {
-		return wfHeaders['x-wf-notify-truncated'] != undefined;
+	var _isTruncatedResponse = function(tdHeaders) {
+		return tdHeaders['X-td-notify-truncated'] != undefined;
 	};
 
     /**
@@ -342,8 +342,8 @@ function TempusTools() {
     /**
      * parses out the values from the header that are needed to build a command object.
      *
-     * the x-wf-1-1-1-# headers have a proprietary format that need to be parsed and then prepped for commandObject,
-     * note - this can be a combined value from multiple x-wf-1-1-1-# headers if the message was large
+     * the X-td-1-1-1-# headers have a proprietary format that need to be parsed and then prepped for commandObject,
+     * note - this can be a combined value from multiple X-td-1-1-1-# headers if the message was large
      *
      * @param value the value of the header
      * @private
@@ -404,7 +404,7 @@ function TempusTools() {
 };
 
 /**
- * on each completed request, check the HAR entry for our lovely headers
+ * on each completed request, check the HAR entry for TempusDebugger headers
  */
 chrome.devtools.network.onRequestFinished.addListener(
     function(request) {
@@ -414,7 +414,7 @@ chrome.devtools.network.onRequestFinished.addListener(
 );
 
 /**
- * On load, make sure to remind that this only works on refresh
+ * On load show the first load message
  */
 var client = new TempusTools();
 client.sendFirstLoadMessage();
