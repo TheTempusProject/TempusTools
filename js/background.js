@@ -1,16 +1,24 @@
 /**
+ * TempusTools/js/background.js
+ *
  * Background processor for TempusTools
  * 
  * Handles various tasks including:
  * - adding the outgoing header
  * - adding a listener for message from devtools to run console log on
  * - inline script
- * 
+ *
+ * @version 1.1
+ *
  * @author Aaron Saray aaron@aaronsaray.com
  *
- * Rewritten for specialized application by:
+ * - Rewritten for specialized application by:
  * 
  * @author Joey Kimsey joeyk4816@gmail.com
+ *
+ * @link    https://TheTempusProject.com/TempusTools
+ *
+ * @license https://opensource.org/licenses/MIT [MIT LICENSE]
  */
 
 /**
@@ -53,13 +61,8 @@ TempusTools.showExtensionEnabled = function()
  */
 chrome.storage.sync.get(['options', 'enabled'], function(settings) {
     if (settings.options) {
-        if (settings.options.blacklist) {
-            var blacklist = settings.options.blacklist.replace(/\s+/, '').split(',');
-            chrome.webRequest.onBeforeRequest.addListener(
-                function() {
-                    TempusTools.addHeaders = false;
-                }, {urls: blacklist}, ['blocking']
-            );
+        if (settings.options.hasOwnProperty('securityHash')) {
+            TempusTools.securityHash = settings.options.securityHash;
         }
         if (settings.options.hasOwnProperty('maxCombinedSize')) {
             TempusTools.maxCombinedSize = settings.options.maxCombinedSize;
@@ -85,11 +88,15 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
             }
             details.requestHeaders.push({
                     name:	'X-TempusDebugger-Version',
-                    value:	'1.0'
+                    value:	'1.1'
                 },
                 {
-                    name:   'X-Wf-Max-Combined-Size',
+                    name:   'X-TempusDebugger-MaX-Combined-Size',
                     value:  TempusTools.maxCombinedSize+''
+                },
+                {
+                    name:   'X-TempusDebugger-securityHash',
+                    value:  TempusTools.securityHash+''
                 });
         }
 
