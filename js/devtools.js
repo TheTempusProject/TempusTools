@@ -62,10 +62,10 @@ function TempusTools() {
 
 	        /** handle truncated message **/
 	        if (_isTruncatedResponse(tdHeaders)) {
-		        var bytes = tdHeaders['X-td-notify-truncated']; //note: the final format has not yet been defined for this
+		        var bytes = tdHeaders['x-td-notify-truncated']; //note: the final format has not yet been defined for this
 		        var commandObject = {
 			        type: "info",
-			        params: ["TempusTools has truncated headers for Chrome.  Truncated bytes: " + bytes]
+			        params: ["TempusTools has truncated headers for Chrome. Truncated bytes: " + bytes]
 		        };
 		        _sendCommandObject(commandObject);
 	        }
@@ -78,7 +78,7 @@ function TempusTools() {
      */
     this.sendFirstLoadMessage = function() {
         var commandObject = {
-            type: "info",
+            type: "warn",
             params: ["TempusTools logging activated.  Please refresh page for all settings to take effect."]
         };
         _sendCommandObject(commandObject);
@@ -104,7 +104,7 @@ function TempusTools() {
         var headers = HAR.response.headers, tdHeaders = {};
 
         /** go through all headers on this request **/
-        var tempusHeaderBeginRegex = /^X-td-/i;
+        var tempusHeaderBeginRegex = /^x-td-/i;
         for (var i = 0; i < headers.length; i++) {
             /** if it matches tempus, add it to the object **/
             if (tempusHeaderBeginRegex.test(headers[i].name)) {
@@ -124,11 +124,11 @@ function TempusTools() {
     var _getSortedMessageHeaders = function(tdHeaders) {
     	/** we can't guarantee the order of any headers, so they need to be sorted properly **/
     	var sortedHeaders = [];
-        var tempusHeaderBeginRegex = /^X-td-1-1-1-/;
+        var tempusHeaderBeginRegex = /^x-td-1-1-1-/;
     	for (var key in tdHeaders) {
     		if (tempusHeaderBeginRegex.test(key)) {
     			/** new key is minus one because our array needs to start at 0 for JS to sort it properly **/
-    			var newKey = parseInt(key.replace('X-td-1-1-1-', '')) - 1;
+    			var newKey = parseInt(key.replace('x-td-1-1-1-', '')) - 1;
     			sortedHeaders[newKey] = tdHeaders[key];
     		}
     	}
@@ -143,7 +143,7 @@ function TempusTools() {
      * @param headerObject
      */
     var _isProperProtocol = function(headerObject) {
-        return headerObject['X-td-Protocol-1'] == 'http://www.thetempusproject.com/tempusTools/1.1';
+        return headerObject['x-td-protocol-1'] == 'http://www.thetempusproject.com/tempusTools/1.1';
     };
 
 	/**
@@ -153,7 +153,7 @@ function TempusTools() {
 	 * @private
 	 */
 	var _isTruncatedResponse = function(tdHeaders) {
-		return tdHeaders['X-td-notify-truncated'] != undefined;
+		return tdHeaders['x-td-notify-truncated'] != undefined;
 	};
 
     /**
@@ -342,8 +342,8 @@ function TempusTools() {
     /**
      * parses out the values from the header that are needed to build a command object.
      *
-     * the X-td-1-1-1-# headers have a proprietary format that need to be parsed and then prepped for commandObject,
-     * note - this can be a combined value from multiple X-td-1-1-1-# headers if the message was large
+     * the x-td-1-1-1-# headers have a proprietary format that need to be parsed and then prepped for commandObject,
+     * note - this can be a combined value from multiple x-td-1-1-1-# headers if the message was large
      *
      * @param value the value of the header
      * @private
