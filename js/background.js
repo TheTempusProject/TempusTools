@@ -87,15 +87,15 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                 }
             }
             details.requestHeaders.push({
-                    name:	'X-TempusDebugger-Version',
+                    name:	'x-tempusdebugger-Version',
                     value:	'1.1'
                 },
                 {
-                    name:   'X-TempusDebugger-MaX-Combined-Size',
+                    name:   'x-tempusdebugger-max-combined-size',
                     value:  TempusTools.maxCombinedSize+''
                 },
                 {
-                    name:   'X-TempusDebugger-securityHash',
+                    name:   'x-tempusdebugger-securityhash',
                     value:  TempusTools.securityHash+''
                 });
         }
