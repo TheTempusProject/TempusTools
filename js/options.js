@@ -49,11 +49,13 @@ function TempusTools_Options() {
      * Used to save options to local storage
      */
     var _save = function() {
-        var securityHash = document.querySelector('#secHash').value,
+        var security_hash = document.querySelector('#sec_hash').value,
             max_combined_size = document.querySelector('#max_combined_size').value;
+            site_url = document.querySelector('#site_url').value;
         var options = {
             securityHash: securityHash,
-            maxCombinedSize: max_combined_size
+            maxCombinedSize: max_combined_size,
+            siteURL: site_url
         };
 
         chrome.storage.sync.set({'options': options}, function () {
@@ -90,8 +92,9 @@ function TempusTools_Options() {
             if (!settings.options) {
                 settings.options = _defaultOptions;
             }
-            document.querySelector('#secHash').value = settings.options.securityHash;
+            document.querySelector('#sec_hash').value = settings.options.securityHash;
             document.querySelector('#max_combined_size').value = settings.options.maxCombinedSize;
+            document.querySelector('#site_url').value = settings.options.siteURL;
         });
     };
 

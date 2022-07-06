@@ -1,23 +1,33 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Tempus Tools",
     "description": "Tools for using and debugging The Tempus Project",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "icons":
     {
         "128": "images/icon_128.png"
     },
-    "browser_action":
+    "action":
     {
         "default_icon": "images/icon.png",
         "default_popup": "html/popup.html"
     },
-    "permissions": ["activeTab", "webRequestBlocking", "webRequest", "tabs", "http://*/*", "https://*/*", "storage"],
+    "permissions": [
+        "activeTab",
+        "webRequestBlocking",
+        "webRequest",
+        "tabs",
+        "storage"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
     "devtools_page": "html/devtools.html",
-    "minimum_chrome_version": "21",
-    "background":
-    {
-        "scripts": ["js/background.js"]
+    "minimum_chrome_version": "78",
+    "background": {
+        "service_worker": "/js/background.js",
+        "type": "module"
     },
     "options_page": "html/options.html"
 }

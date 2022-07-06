@@ -67,19 +67,22 @@ chrome.storage.sync.get(['options', 'enabled'], function(settings) {
         if (settings.options.hasOwnProperty('maxCombinedSize')) {
             TempusTools.maxCombinedSize = settings.options.maxCombinedSize;
         }
+        if (settings.options.hasOwnProperty('siteURL')) {
+            TempusTools.maxCombinedSize = settings.options.siteURL;
+        }
     }
     if (settings.hasOwnProperty('enabled')) {
         TempusTools.enabled = settings.enabled;
         TempusTools.showExtensionEnabled();
     }
 });
-
 /**
  * On header send, add in the header for TempusTools and 256k limit for chrome header size
  * note: it has to go here, not in devtools.js because devtools only gets called when you show it
  */
 chrome.webRequest.onBeforeSendHeaders.addListener(
 	function(details) {
+    console.log('onBeforeRequest', details.url);
         if (TempusTools.addHeaders && TempusTools.enabled) {
             for (var i = 0; i < details.requestHeaders.length; i++) {
                 if (details.requestHeaders[i].name == 'User-Agent') {
@@ -116,11 +119,21 @@ const LOGGER = function (json, enabled) {
     }
 };
 
+
+
+// chrome.runtime.onMessage.addListener( // this is the message listener
+//     function(request, sender, sendResponse) {
+//         if (request.message === "messageSent")
+//             runThisFunction();
+//     }
+// );
+
+
 /** 
  * messages come from devtools in the form of an object with a type of console log an a message to send
  * all escaped and jsonified
  */
-chrome.extension.onMessage.addListener(
+chrome.runtime.onMessage.addListener(
 	function(commandObject) {
 		//inject LOGGER code and pass argument of our escaped stringified object
 		chrome.tabs.executeScript(null, {
@@ -132,9 +145,22 @@ chrome.extension.onMessage.addListener(
 /**
  * Define the click handler for the badge to handle disable/enable
  */
-chrome.browserAction.onClicked.addListener(function(tab){
+chrome.action.onClicked.addListener((tab) => {
     TempusTools.enabled = !TempusTools.enabled;
     chrome.storage.sync.set({'enabled': TempusTools.enabled}, function() {
         TempusTools.showExtensionEnabled();
     });
 });
+
+// chrome.runtime.onMessage.addListener( // this is the message listener
+//     function(request, sender, sendResponse) {
+//         if (request.message === "messageSent")
+//             runThisFunction();
+//     }
+// );
+
+
+
+// chrome.action.onClicked.addListener((tab) => {
+//   chrome.tabs.create({url: "https://www.youtube.com"});
+// });
